@@ -5,3 +5,15 @@ export function getBannerList() {
 		url: "/home/swiperdata"
 	})
 }
+
+export function getNav() {
+	return request({
+		url: "/home/catitems"
+	})
+}
+
+export function getFloor() {
+	return request({
+		url: "/home/floordata"
+	})
+}
