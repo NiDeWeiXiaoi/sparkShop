@@ -4,11 +4,13 @@
 		 <u-tabs :list="list" :scrollable="false" :lineColor="{color: '#EA4350'}"></u-tabs>
 		 <view class="goods-list">
 			 <view class="goods-item" v-for="item in goodsList" :key="item.cat_id">
-				 <image class="goods-image" :src="item.goods_big_logo || defaultImage" mode="widthFix"></image>
-				 <view class="info">
-					 <view class="name">{{item.goods_name}}</view>
-					 <view class="price">{{item.goods_price}}</view>
-				 </view>
+				<navigator class="navigate" open-type="navigate" :url="`/pages/detail/detail?goods_id=${item.goods_id}`">
+					<image class="goods-image" :src="item.goods_big_logo || defaultImage" mode="widthFix"></image>
+					<view class="info">
+						<view class="name">{{item.goods_name}}</view>
+						<view class="price">{{item.goods_price}}</view>
+					</view>
+				</navigator>
 			 </view>
 			 <view class="bottom" v-if="isShowBottom">
 				我是有底线的~
@@ -50,9 +52,7 @@
 		},
 		// 上拉加载
 		onReachBottom() {
-			if(this.goodsList.length >= this.total) {
-				console.log('没数据了')
-			}
+			if(this.goodsList.length >= this.total) return;
 			this.queryParams.pagenum++
 			this.getGoodsList()
 		},
@@ -67,7 +67,6 @@
 		methods: {
 			async getGoodsList() {
 				const res = await getGoods(this.queryParams)
-				console.log(res)
 				this.goodsList = [...this.goodsList, ...res.message.goods]
 				this.total = res.message.total
 			}
@@ -83,6 +82,11 @@
 	.goods-item {
 		display: flex;
 		padding: 25rpx;
+		
+		.navigate {
+			display: flex;
+		}
+		
 		.goods-image {
 			overflow: hidden;
 			width: 190rpx;
