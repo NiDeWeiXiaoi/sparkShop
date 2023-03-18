@@ -6,3 +6,10 @@ export const getGoods = (data) => {
 		data
 	})
 }
+
+export const getDetails = (data) => {
+	return request({
+		url: "/goods/detail",
+		data
+	})
+}
