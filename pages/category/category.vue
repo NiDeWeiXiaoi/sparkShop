@@ -4,17 +4,18 @@
 		<view class="content">
 			<scroll-view scroll-y="true" class="left-list">
 				<view class="cate_left_item" :class="activeIndex === index ? 'item item-actived' : 'item'" 
-				@tap="changeActive(index)" v-for="item,index in categoryNav" :key="item.cat_id"><text>{{item.cat_name}}</text></view>
+				@tap="changeActive(index)" v-for="item,index in categoryNav" :key="item.cat_id">{{item.cat_name}}</view>
 			</scroll-view>
 			
 			<scroll-view scroll-y="true" class="right-list">
 				<view class="content-title" v-for="item in rightList" :key="item.cat_id">
 					<view class="title">{{item.cat_name}}</view>
 					<view class="item-box">
-						<view class="item-data" v-for="category in item.children" :key="category.cat_id">
-							<image :src="category.cat_icon" mode=""></image>
+						<navigator :url="`/pages/goods/goods?cid=${category.cat_id}&query=${category.cat_name}`" class="item-data" v-for="category in item.children" :key="category.cat_id">
+							<image :src="category.cat_icon" lazy-load
+							 mode="aspectFill"></image>
 							<text>{{category.cat_name}}</text>
-						</view>
+						</navigator>
 					</view>
 				</view>
 			</scroll-view>
@@ -79,10 +80,6 @@
 					display: flex;
 					justify-content: center;
 					align-items: center;
-					
-					text {
-						width: 100%
-					}
 				}
 				
 				.item {
@@ -100,6 +97,8 @@
 						width: 4rpx;
 						height: 43rpx;
 						background-color: #EA4350;
+						position: absolute;
+						left: 0;
 					}
 				}
 			}
