@@ -23,7 +23,7 @@
 				<text class="total-name">合计：</text>
 				<text class="total-price">{{selectCartPrice}}</text>
 			</view>
-			<view class="account">去结算({{selectCartCount}})</view>
+			<view class="account" @tap="gotoPay">去结算({{selectCartCount}})</view>
 		</view>
 	</view>
 </template>
@@ -71,6 +71,20 @@
 				newsList.forEach(item => item.goods_select = tempSelect)
 				
 				this.$store.commit("setCartList", newsList)
+			},
+			
+			gotoPay() {
+				if(this.selectCartCount === 0) {
+					uni.showToast({
+						title: "请选择商品",
+						icon: "none"
+					})
+					return;
+				}
+				
+				uni.navigateTo({
+					url: "/pages/pay/pay"
+				})
 			}
 		}
 	}

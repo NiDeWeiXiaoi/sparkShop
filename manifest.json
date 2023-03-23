@@ -56,6 +56,10 @@
             "postcss" : true,
             "es6" : true
         },
+		// "requiredPrivateInfos": [
+		// 	"chooseAddress"
+		// ],
+		"requiredPrivateInfos":["chooseAddress"],
         "usingComponents" : true
     },
     "mp-alipay" : {
