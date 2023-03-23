@@ -1,9 +1,9 @@
 <template>
 	<view class="cart">
 		<view class="cart-item" v-for="item in cartList" :key="item.cat_id">
-			<radio :checked="item.goods_select" @tap="changeSelect(item.goods_id)" color="#ea4350"></radio>
+			<radio :checked="item.goods_select" @tap="changeSelect(`${item.goods_id}`)" color="#ea4350"></radio>
 			<view class="cart-count">
-				<u-number-box v-model="value"></u-number-box>
+				<u-number-box :value="item.goods_count" :name="item.goods_id" @change="changeCount"></u-number-box>
 			</view>
 			<navigator class="navigate" open-type="navigate">
 				<image class="goods-image" :src="item.goods_small_logo || defaultImage" mode="widthFix"></image>
@@ -13,32 +13,64 @@
 				</view>
 			</navigator>
 		</view>
+		
+		<view class="bottom">
+			<view class="select">
+				<radio :checked="isSelectAll" color="#ea4350" @tap="handlerSelectAll"></radio>
+				<text class="select-text">全选</text>
+			</view>
+			<view class="total">
+				<text class="total-name">合计：</text>
+				<text class="total-price">{{selectCartPrice}}</text>
+			</view>
+			<view class="account">去结算({{selectCartCount}})</view>
+		</view>
 	</view>
 </template>
 
 <script>
-	import { mapState } from "vuex"
+	import { mapState, mapGetters } from "vuex"
 	export default {
 		data() {
 			return {
-				value: 0
+				defaultImgae: "https://www.ssfiction.com/wp-content/uploads/2020/08/20200805_5f2b1669e9a24.jpg"
 			}
 		},
 		computed: {
-			...mapState(['cartList'])
+			...mapState(['cartList']),
+			...mapGetters(['selectCartPrice', 'selectCartCount']),
+			isSelectAll() {
+				return this.$store.getters.isSelectAll
+			}
 		},
 		onLoad() {
 
 		},
 		methods: {
-			changeSelect(id) {
-				console.log(id)
+			changeSelect(goodsId) {
 				let newsList = [...this.cartList]
-				// let index = newsList.findIndex(v => v.goods_id === goods_id)
-				// console.log(newsList[index])
-				// newsList[index].goods_select = !newsList[index].goods_select
+				let index = newsList.findIndex(v => v.goods_id === Number(goodsId))
+				newsList[index].goods_select = !newsList[index].goods_select
 				
-				// this.$store.commit("setCartList", newsList)
+				this.$store.commit("setCartList", newsList)
+			},
+			
+			changeCount(val) {
+				let newsList = [...this.cartList]
+				let index = newsList.findIndex(v => v.goods_id === Number(val.name))
+				console.log(index)
+				newsList[index].goods_count = val.value
+				
+				this.$store.commit("setCartList", newsList)
+			},
+			
+			handlerSelectAll() {
+				let tempSelect = !this.isSelectAll
+				let newsList = [...this.cartList]
+				
+				newsList.forEach(item => item.goods_select = tempSelect)
+				
+				this.$store.commit("setCartList", newsList)
 			}
 		}
 	}
@@ -90,6 +122,51 @@
 					display: inline-block;
 				}
 			}
+		}
+	}
+
+	.bottom {
+		height: 100rpx;
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		border-top: 1px solid #ddd;
+		background-color: #fff;
+		display: flex;
+		align-items: center;
+		padding: 0 20rpx;
+		
+		.select {
+			.select-text {
+				font-size: 22rpx;
+				margin: 0 20rpx;
+				color: #999;
+			}
+		}
+		
+		.total {
+			flex: 1;
+				
+			.total-name {
+				font-size: 24rpx;
+			}
+			
+			.total-price {
+				color: #EA4350;
+			}
+		}
+		
+		.account {
+			background-color: #EA4350;
+			color: #fff;
+			font-size: 22rpx;
+			width: 150rpx;
+			height: 52rpx;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			border-radius: 26rpx;
 		}
 	}
 }
