@@ -104,7 +104,6 @@
 			position: absolute;
 			right: 10rpx;
 			bottom: 10rpx;
-			background-color: pink;
 		}
 		
 		.navigate {
